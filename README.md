@@ -747,7 +747,7 @@ npm install
   
 ### Controladores
 
-- UsersController - Gerencia usuários.
+- UsersController- Gerencia usuários.
   
 - SalesController - Gerencia vendas.
   
@@ -763,16 +763,18 @@ npm install
 
 ### Público
 
-- POST /login - Realiza login.
+- POST /login
+ - Realiza login.
   
 - POST /register - Registra um novo usuário.
   
 ### Protegido por Autenticação
 
-- GET /user - Lista todos os usuários.
+### GET /user
+- Lista todos os usuários.
 
-- GET /user/:id
-  - Exibe um usuário específico.
+### GET /user/:id
+- Exibe um usuário específico.
 
 ### PATCH /user/:id
 - Atualiza um usuário específico.
