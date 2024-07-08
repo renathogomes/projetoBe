@@ -693,13 +693,13 @@ export default class AuthMiddleware {
 
 ```
 
-### Projeto de Gestão de Vendas
+## Projeto de Gestão de Vendas
 
-## Descrição
+### Descrição
 
 Este projeto é uma aplicação backend desenvolvida com AdonisJS, que gerencia clientes, produtos, vendas, e dados de contato. Utiliza um banco de dados MySQL para armazenar informações e inclui funcionalidades de autenticação de usuários.
 
-## Tecnologias Utilizadas
+### Tecnologias Utilizadas
 
 - Node.js - Ambiente de execução JavaScript no servidor.
   
@@ -709,9 +709,9 @@ Este projeto é uma aplicação backend desenvolvida com AdonisJS, que gerencia 
   
 - Docker - Containerização do banco de dados.
   
-## Configuração do Ambiente
+### Configuração do Ambiente
 
-# Instalação do MySQL com Docker
+#### Instalação do MySQL com Docker
 
 Para rodar o MySQL em um container Docker, utilize o seguinte comando:
 
