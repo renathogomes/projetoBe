@@ -803,6 +803,33 @@ npm install
 
 #### POST /login
  - Realiza login.
+
+##### exemplo:
+
+Requisição
+
+```
+{
+	"email": "user@test.com",
+	"password": "123123"
+}
+
+```
+Resposta
+
+```
+{
+	"user": {
+		"id": 7,
+		"username": "userzin",
+		"email": "user@test.com",
+		"createdAt": "2024-07-08T14:34:42.000+00:00",
+		"updatedAt": "2024-07-08T14:34:42.000+00:00"
+	},
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNzIwNDU5OTc3LCJleHAiOjE3MjA1NDYzNzd9.a1B48Xd8qeHgP4rBtAiXsH-jSXrTHSiuJn_s3166DCg"
+}
+
+```
   
 #### POST /register
   - Registra um novo usuário.
