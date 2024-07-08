@@ -68,7 +68,36 @@ router.post('/register', [LoginController, 'register']).use(middleware.registrat
 
 router
   .group(() => {
+    /**
+     * @api{get} /user Lista os clientes
+     * @apiName ListUser
+     * @apiGroup Users
+     *
+     * @apiSuccessExemple {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * {
+     *   "date": [
+     *   {
+     *    "id": "2",
+     *    "username": "isaiza@gmail.com",
+     *    "createdAt": "2024-07-08T19:00:53.570+00:00",
+     *    "updatedAt": "2024-07-08T19:00:53.570+00:00",
+     *   }, {
+     *    "id": "1",
+     *    "username": "exemplo@exemplo.com",
+     *    "createdAt": "2024-07-08T19:00:53.570+00:00",
+     *    "updatedAt": "2024-07-08T19:00:53.570+00:00",
+     *   }
+     * ]
+     * }
+     * }
+     *
+     */
     router.get('/user', [UsersController, 'index'])
+    /**
+     *
+     */
     router.get('/user/:id', [UsersController, 'show'])
     router.delete('/user/:id', [UsersController, 'destroy'])
     router.patch('/user/:id', [UsersController, 'update'])
@@ -122,11 +151,37 @@ router
      *      "cpf": "0356345333",
      *     }
      * }
-     *
-     * @apiError ClienteNaoEncontrado O cliente não foi encontrado.
      */
 
     router.get('/clients', [ClientsController, 'index'])
+    /**
+     * @api {get} /products/:id listar clientes
+     * @apiName GetClient
+     * @apiGroup Clients
+     *
+     * @apiParam {String} id identificador do cliente
+     *
+     * @apiSuccess {Number} id ID do produto.
+     * @apiSuccess {String} name Nome do produto.
+     * @apiSuccess {String} description Descrição do produto.
+     * @apiSuccess {Number} price Preço do produto.
+     * @apiSuccess {String} created_at Data de criação do produto.
+     * @apiSuccess {String} updated_at Data de atualização do produto.
+     * @apiSuccess {Number} isDeleted Número para soft delete.
+     *
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * product: {
+     * "id": 1,
+     * "name": "Notebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000,
+     * "created_at": "2024-07-08T19:00:53.570+00:00",
+     * "updated_at": "2024-07-08T19:00:53.570+00:00",
+     * "isDeleted": 0
+     * }
+     */
     router.get('/clients/:id', [ClientsController, 'show'])
     router.patch('/clients/:id', [ClientsController, 'update'])
     router.put('/clients/:id', [ClientsController, 'update'])
@@ -138,6 +193,33 @@ router
     ])
     router.put('/clients/:clientId/phoneNumbers/:phoneNumberId', [PhoneNumbersController, 'update'])
     router.post('/clients/:clientId/addresses', [AddressesController, 'store'])
+    /**
+     * @api {get} /products Listar produtos
+     * @apiName GetProducts
+     * @apiGroup Products
+     *
+     * @apiSuccess {Number} id ID do produto.
+     * @apiSuccess {String} name Nome do produto.
+     * @apiSuccess {String} description Descrição do produto.
+     * @apiSuccess {Number} price Preço do produto.
+     *
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * product: [
+     * {
+     * "id": 1,
+     * "name": "Notebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000
+     * },
+     * {
+     * "id": 2,
+     * "name": "Smartphone",
+     * "description": "Smartphone Samsung 8GB RAM 128GB",
+     * "price": 2000
+     * }
+     */
     router.get('/products', [ProductsController, 'index'])
     /**
      * @api {get} /products Listar produtos
@@ -232,21 +314,40 @@ router
      */
     router.post('/products/:id', [ProductsController, 'store'])
     /**
+     * 
+     * 
+    @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * message: {'Produto criado com sucesso!
+     * product: {
+     * "name": "Nodebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000,
+     * "created_at": "2024-07-08T19:00:53.570+00:00",
+     * "updated_at": "2024-07-08T19:00:53.570+00:00",
+     * "isDeleted": 0
+     * }
+     * }
+     * }
+     **/
+    router.post('/products', [ProductsController, 'store'])
+    router.patch('/products/:id', [ProductsController, 'update'])
+    router.post('/products/:id/restore', [ProductsController, 'restore'])
+    /**
      * @api {put} /products/:id Atualizar produto
      * @apiName PutProduct
      * @apiGroup Products
      *
      * @apiParam {String} id identificador do produto
      *
-     * @apiBody {String}   name Nome do produto
-     * @apiBody {String}   description  Descrição do produto"
+     * @apiBody {String} name Nome do produto
+     * @apiBody {String} description  Descrição do produto"
+     * @apiBody {Number} price Preço do projuto
      *
      */
-    router.post('/products', [ProductsController, 'store'])
-    router.patch('/products/:id', [ProductsController, 'update'])
-    router.post('/products/:id/restore', [ProductsController, 'restore'])
     router.put('/products/:id', [ProductsController, 'update'])
-    router.get('/sales', [SalesController, 'index']).use(middleware.auth())
-    router.post('/sales', [SalesController, 'store']).use(middleware.auth())
+    router.get('/sales', [SalesController, 'index'])
+    router.post('/sales', [SalesController, 'store'])
   })
   .use(middleware.auth())

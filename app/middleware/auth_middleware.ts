@@ -11,13 +11,12 @@ export default class AuthMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const { authorization } = ctx.request.headers()
 
-    if (!authorization) {
-      return ctx.response.status(401).json({
-        message: 'Não autorizado',
-      })
-    }
-
     try {
+      if (!authorization) {
+        return ctx.response.status(401).json({
+          message: 'Não autorizado',
+        })
+      }
       const token = authorization.split(' ')[1]
 
       const { id } = jwt.verify(token, process.env.JWT_SECRET ?? '') as JwtPayload

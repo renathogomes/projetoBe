@@ -9,7 +9,6 @@ export default class extends BaseSchema {
 
       table.integer('client_id').unsigned().references('clients.id')
       table.integer('product_id').unsigned().references('products.id')
-      table.unique(['client_id', 'product_id'])
 
       table.integer('quantity')
       table.integer('unit_price')
