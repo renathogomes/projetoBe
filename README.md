@@ -724,8 +724,8 @@ docker container run --name container-mysql -e MYSQL_ROOT_PASSWORD=senha-mysql -
 Clone o repositório e instale as dependências:
 
 ```typescript
-git clone <repository_url>
-cd <project_directory>
+git clone git@github.com:renathogomes/projetoBe.git>
+cd projetoBe
 npm install
 ```
 
