@@ -24,7 +24,7 @@ router.get('/', async () => {
 })
 
 router.post('/login', [LoginController, 'login'])
-router.post('/register', [LoginController, 'register'])
+router.post('/register', [LoginController, 'register']).use(middleware.registrationValidation())
 
 router
   .group(() => {

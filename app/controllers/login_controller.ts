@@ -5,28 +5,28 @@ import bcrypt from 'bcrypt'
 
 export default class LoginController {
   async register({ request, response }: HttpContext) {
-    const { username, email, password } = request.body()
+    try {
+      const { username, email, password } = request.body()
 
-    const existingUser = await User.findBy('email', email)
-    if (existingUser) {
-      return response.status(400).json({
-        message: 'Email já cadastrado, por favor faça login.',
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      const user = await User.create({
+        username,
+        email,
+        password: hashedPassword,
       })
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+      response.status(201)
 
-    const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-    })
-
-    response.status(201)
-
-    return {
-      message: 'Usuário cadastrado com sucesso!',
-      data: user,
+      return {
+        message: 'Usuário cadastrado com sucesso!',
+        data: user,
+      }
+    } catch (error) {
+      console.error(error)
+      return response.status(500).json({
+        message: 'Ocorreu um erro ao cadastrar o usuário.',
+      })
     }
   }
 
