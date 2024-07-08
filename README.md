@@ -763,71 +763,72 @@ npm install
 
 ### Público
 
-- POST /login
+#### POST /login
  - Realiza login.
   
-- POST /register - Registra um novo usuário.
+#### POST /register
+  - Registra um novo usuário.
   
 ### Protegido por Autenticação
 
-### GET /user
+#### GET /user
 - Lista todos os usuários.
 
-### GET /user/:id
+#### GET /user/:id
 - Exibe um usuário específico.
 
-### PATCH /user/:id
+#### PATCH /user/:id
 - Atualiza um usuário específico.
 
-### DELETE /user/:id
+#### DELETE /user/:id
 - Deleta um usuário específico.
 
-### POST /clients
+#### POST /clients
 - Cria um novo cliente.
 
-### GET /clients
+#### GET /clients
 - Lista todos os clientes.
 
-### GET /clients/:id
+#### GET /clients/:id
 - Exibe um cliente específico.
 
-### PATCH /clients/:id
+#### PATCH /clients/:id
 - Atualiza um cliente específico.
 
-### DELETE /clients/:id
+#### DELETE /clients/:id
 - Deleta um cliente específico.
 
-### POST /clients/:clientId/phoneNumbers
+#### POST /clients/:clientId/phoneNumbers
  - Adiciona um número de telefone ao cliente.
 
-### PATCH /clients/:clientId/phoneNumbers/:id
+#### PATCH /clients/:clientId/phoneNumbers/:id
  - Atualiza um número de telefone do cliente.
 
-### POST /clients/:clientId/addresses
+#### POST /clients/:clientId/addresses
  - Adiciona um endereço ao cliente.
 
-### GET /products
+#### GET /products
 - Lista todos os produtos.
 
-### GET /products/:id
+#### GET /products/:id
 - Exibe um produto específico.
 
-### POST /products
+#### POST /products
 - Cria um novo produto.
 
-### PATCH /products/:id
+#### PATCH /products/:id
 - Atualiza um produto específico.
 
-### POST /products/:projectId/restore
+#### POST /products/:projectId/restore
  - Restaura um produto deletado.
 
-### DELETE /products/:id
+#### DELETE /products/:id
 - Deleta um produto específico.
 
-### GET /sales
+#### GET /sales
 - Lista todas as vendas.
 
-### POST /sales
+#### POST /sales
 - Cria uma nova venda.
 
 ## Exemplo de Uso
