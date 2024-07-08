@@ -674,22 +674,29 @@ export default class AuthMiddleware {
       })
     }
 
-    const token = authorization.split(' ')[1]
+    try {
+      const token = authorization.split(' ')[1]
 
-    const { id } = jwt.verify(token, process.env.JWT_SECRET ?? '') as JwtPayload
+      const { id } = jwt.verify(token, process.env.JWT_SECRET ?? '') as JwtPayload
 
-    const user = await User.find(id)
+      const user = await User.find(id)
 
-    if (!user) {
-      return ctx.response.status(404).json({
-        message: 'Usuário não encontrado',
+      if (!user) {
+        return ctx.response.status(404).json({
+          message: 'Usuário não encontrado',
+        })
+      }
+
+      const output = await next()
+      return output
+    } catch (error) {
+      return ctx.response.status(401).json({
+        message: 'Não autorizado',
       })
     }
-
-    const output = await next()
-    return output
   }
 }
+
 
 ```
 
