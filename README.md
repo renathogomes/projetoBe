@@ -804,9 +804,9 @@ npm install
 #### POST /login
  - Realiza login.
 
-##### exemplo:
+Exmplo:
 
-Requisição
+Envio
 
 ```
 {
@@ -833,6 +833,35 @@ Resposta
   
 #### POST /register
   - Registra um novo usuário.
+
+Exemplo:
+
+Envio
+
+```
+{
+	"username": "userzin",
+	"email": "user1@test.com",
+	"password": "123123"
+}
+
+```
+
+Resposta
+
+```
+{
+	"message": "Usuário cadastrado com sucesso!",
+	"data": {
+		"username": "userzin",
+		"email": "user1@test.com",
+		"createdAt": "2024-07-08T17:39:22.523+00:00",
+		"updatedAt": "2024-07-08T17:39:22.523+00:00",
+		"id": 8
+	}
+}
+
+```
   
 ### Protegido por Autenticação
 
