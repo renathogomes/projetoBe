@@ -23,7 +23,47 @@ router.get('/', async () => {
   }
 })
 
+/**
+ * @api {post} /login User Login
+ * @apiName LoginUser
+ * @apiGroup User
+ *
+ * @apiBody {String} email User email.
+ * @apiBody {String} password User password.
+ *
+ * @apiSuccess {Object} user User information.
+ * @apiSuccess {String} token JWT token.
+ *
+ * @apiError UserNotFound The user with the provided email was not found.
+ * @apiError InvalidPassword The provided password is incorrect.
+ */
+
 router.post('/login', [LoginController, 'login'])
+
+/**
+ * @api {post} /clients Registra um Cliente
+ * @apiName RegisterClient
+ * @apiGroup Clientes
+ *
+ * @apiBody {String} name Nome do cliente
+ * @apiBody {String} cpf CPF do cliente
+ *
+ * @apiSuccess {String} message Mensagem de sucesso
+ * @apiSuccessExample {json} Sucesso
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Cliente cadastrado com sucesso!",
+ *   "data": {
+ *     "name": "Renatho",
+ *     "cpf": "1243535346",
+ *     "createdAt": "2024-07-08T19:00:53.570+00:00",
+ *     "updatedAt": "2024-07-08T19:00:53.570+00:00",
+ *     "id": 2
+ *   }
+ * }
+ *
+ * @apiError ClienteNaoEncontrado O cliente não foi encontrado.
+ */
 router.post('/register', [LoginController, 'register']).use(middleware.registrationValidation())
 
 router
@@ -33,7 +73,59 @@ router
     router.delete('/user/:id', [UsersController, 'destroy'])
     router.patch('/user/:id', [UsersController, 'update'])
     router.put('/user/:id', [UsersController, 'update'])
+
+    /**
+     * @api{post} /clients Registra um Cliente
+     * @apiName RegisterClient
+     * @apiGroup Clientes
+     * @apiBody {String} name Nome do cliente
+     * @apiBody {String} cpf CPF do cliente
+     *
+     * @apiSuccess {String} message Mensagem de sucesso
+     * @apiSuccessExemple {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * {
+     *  "message": "Cliente cadastrado com sucesso!",
+     *   "date": {
+     *   "name": "Renatho",
+     *   "cpf": "1243535346",
+     *  "createdAt": "2024-07-08T19:00:53.570+00:00",
+     * "updatedAt": "2024-07-08T19:00:53.570+00:00",
+     * "id": 2
+     * }
+     *}
+     * }
+     *
+     */
     router.post('/clients', [ClientsController, 'store'])
+
+    /**
+     * @api {get} /clients Busca os clientes
+     * @apiName ListClients
+     * @apiGroup Clientes
+     *
+     *
+     * @apiSuccess {String} message Mensagem de sucesso
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     *   "client": [
+     *     {
+     *      "id": 1
+     *      "name": "Renatho",
+     *      "cpf": "0628364683",
+     *     },
+     *     {
+     *      "id": 2
+     *      "name": "Affonso",
+     *      "cpf": "0356345333",
+     *     }
+     * }
+     *
+     * @apiError ClienteNaoEncontrado O cliente não foi encontrado.
+     */
+
     router.get('/clients', [ClientsController, 'index'])
     router.get('/clients/:id', [ClientsController, 'show'])
     router.patch('/clients/:id', [ClientsController, 'update'])
@@ -47,8 +139,109 @@ router
     router.put('/clients/:clientId/phoneNumbers/:phoneNumberId', [PhoneNumbersController, 'update'])
     router.post('/clients/:clientId/addresses', [AddressesController, 'store'])
     router.get('/products', [ProductsController, 'index'])
+    /**
+     * @api {get} /products Listar produtos
+     * @apiName GetProducts
+     * @apiGroup Products
+     *
+     * @apiSuccess {Number} id ID do produto.
+     * @apiSuccess {String} name Nome do produto.
+     * @apiSuccess {String} description Descrição do produto.
+     * @apiSuccess {Number} price Preço do produto.
+     *
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * product: [
+     * {
+     * "id": 1,
+     * "name": "Notebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000
+     * },
+     * {
+     * "id": 2,
+     * "name": "Smartphone",
+     * "description": "Smartphone Samsung 8GB RAM 128GB",
+     * "price": 2000
+     * }
+     */
     router.get('/products/:id', [ProductsController, 'show'])
+    /**
+     * @api {get} /products/:id Listar produto
+     * @apiName GetProduct
+     * @apiGroup Products
+     *
+     * @apiParam {String} id identificador do produto
+     *
+     * @apiSuccess {Number} id ID do produto.
+     * @apiSuccess {String} name Nome do produto.
+     * @apiSuccess {String} description Descrição do produto.
+     * @apiSuccess {Number} price Preço do produto.
+     * @apiSuccess {String} created_at Data de criação do produto.
+     * @apiSuccess {String} updated_at Data de atualização do produto.
+     * @apiSuccess {Number} isDeleted Número para soft delete.
+     *
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * product: {
+     * "id": 1,
+     * "name": "Notebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000,
+     * "created_at": "2024-07-08T19:00:53.570+00:00",
+     * "updated_at": "2024-07-08T19:00:53.570+00:00",
+     * "isDeleted": 0
+     * }
+     */
     router.delete('/products/:id', [ProductsController, 'destroy'])
+    /**
+     * @api {post} /products/:id Criar produto
+     * @apiName PostProduct
+     * @apiGroup Products
+     *
+     * @apiParam {String} id identificador do produto
+     *
+     * @apiBody {String}   name Nome do produto
+     * @apiBody {String}   description  Descrição do produto
+     * @apiBody {Number}   price Preço do produto
+     *
+     * @apiSuccess {String} name Nome do produto.
+     * @apiSuccess {String} description Descrição do produto.
+     * @apiSuccess {Number} price Preço do produto.
+     * @apiSuccess {String} created_at Data de criação do produto.
+     * @apiSuccess {String} updated_at Data de atualização do produto.
+     * @apiSuccess {Number} isDeleted Número para soft delete.
+     * @apiSuccess {String} message Mensagem informando que o produto foi deletado.
+     * @apiSuccessExample {json} Sucesso
+     * HTTP/1.1 200 OK
+     * {
+     * message: {'Produto criado com sucesso!
+     * product: {
+     * "name": "Nodebook",
+     * "description": "Notebook Acer i7 16GB RAM 1TB SSD",
+     * "price": 5000,
+     * "created_at": "2024-07-08T19:00:53.570+00:00",
+     * "updated_at": "2024-07-08T19:00:53.570+00:00",
+     * "isDeleted": 0
+     * }
+     * }
+     * }
+     *
+     */
+    router.post('/products/:id', [ProductsController, 'store'])
+    /**
+     * @api {put} /products/:id Atualizar produto
+     * @apiName PutProduct
+     * @apiGroup Products
+     *
+     * @apiParam {String} id identificador do produto
+     *
+     * @apiBody {String}   name Nome do produto
+     * @apiBody {String}   description  Descrição do produto"
+     *
+     */
     router.post('/products', [ProductsController, 'store'])
     router.patch('/products/:id', [ProductsController, 'update'])
     router.post('/products/:id/restore', [ProductsController, 'restore'])

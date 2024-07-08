@@ -1,0 +1,11 @@
+{
+    "name": "ProjetoBe",
+    "version": "1.0.0",
+    "description": "Projeto de Teste para vaga Jr",
+    "title": "Projeto Be",
+    "url": "http://localhost",
+    "sampleUrl": "http://localhost",
+    "template": {
+      "forceLanguage": "pt_br"
+    }
+}

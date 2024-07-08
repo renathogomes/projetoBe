@@ -7,6 +7,12 @@ export default class AddressesController {
     const clientId = params.clientId
     const body = request.body()
 
+    if (!clientId) {
+      return response.status(404).json({
+        message: 'Cliente não encontrado.',
+      })
+    }
+
     const client = await Client.findOrFail(clientId)
 
     const address = await Address.create({
