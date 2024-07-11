@@ -36,7 +36,7 @@ export default class LoginController {
     const user = await User.findBy('email', email)
     if (!user) {
       return response.status(404).json({
-        message: 'E-mail ou senha inválidos.',
+        message: 'Credenciais inválidas',
       })
     }
 
@@ -44,7 +44,7 @@ export default class LoginController {
 
     if (!verifyPassword) {
       return response.status(404).json({
-        message: 'E-mail ou senha inválidos.',
+        message: 'Credenciais inválidas',
       })
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? '', {
