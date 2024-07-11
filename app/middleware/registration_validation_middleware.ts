@@ -8,7 +8,13 @@ export default class RegistrationValidationMiddleware {
 
     if (!username || !email || !password) {
       return ctx.response.status(400).json({
-        message: 'Por favor, verifique se todos os campos estão preenchidos corretamente.',
+        message: 'Credenciais inválidas',
+      })
+    }
+
+    if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+      return ctx.response.status(400).json({
+        message: 'Credenciais inválidas',
       })
     }
 
