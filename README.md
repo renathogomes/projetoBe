@@ -39,6 +39,11 @@ Para instalar e rodar o projeto, siga os passos abaixo:
     ```bash
     npm run dev
     ```
+8. A documentação detalhada pode ser vista através desse link
+```
+http://127.0.0.1:5500/docs/index.html
+
+```
 
 ## Configuração
 
