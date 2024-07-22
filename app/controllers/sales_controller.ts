@@ -23,14 +23,6 @@ export default class SalesController {
     const product = await Product.findOrFail(productId)
     const unitPrice = product.price
 
-    if (!client) {
-      return response.status(404).json({ message: 'Cliente não encontrado!' })
-    }
-
-    if (!product) {
-      return response.status(404).json({ message: 'Produto não encontrado!' })
-    }
-
     const totalPrice = quantity * unitPrice
 
     const clientName = client.name

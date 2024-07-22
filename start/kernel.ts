@@ -42,6 +42,11 @@ router.use([
  * the routes or the routes group.
  */
 export const middleware = router.named({
+  loginValidation: () => import('#middleware/login_validation_middleware'),
+  salesValidation: () => import('#middleware/sales_validation_middleware'),
+  userValidation: () => import('#middleware/user_validation_middleware'),
+  productValidation: () => import('#middleware/product_validation_middleware'),
+  clientValidation: () => import('#middleware/client_validation_middleware'),
   registrationValidation: () => import('#middleware/registration_validation_middleware'),
   auth: () => import('#middleware/auth_middleware'),
 })

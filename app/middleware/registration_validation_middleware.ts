@@ -1,20 +1,31 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
 
 export default class RegistrationValidationMiddleware {
+  private schema = z.object({
+    username: z
+      .string()
+      .min(1, 'The username is required.')
+      .refine((value) => value.trim().length > 0, 'The username cannot be just whitespace.'),
+    email: z.string().email(),
+    password: z.string(),
+  })
+
   async handle(ctx: HttpContext, next: NextFn) {
     const { username, email, password } = ctx.request.body()
 
-    if (!username || !email || !password) {
+    try {
+      this.schema.parse({ username, email, password })
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return ctx.response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
       return ctx.response.status(400).json({
-        message: 'Por favor, verifique se todos os campos estão preenchidos corretamente.',
-      })
-    }
-
-    if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
-      return ctx.response.status(400).json({
-        message: 'Por favor, verifique se todos os campos estão preenchidos corretamente.',
+        message: 'Error validating registration data.',
       })
     }
 
@@ -22,7 +33,7 @@ export default class RegistrationValidationMiddleware {
 
     if (existingUser) {
       return ctx.response.status(400).json({
-        message: 'Email já cadastrado!',
+        message: ['Email already registered!'],
       })
     }
 
