@@ -1,7 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Client from './client.js'
 
 export default class Address extends BaseModel {
+  @belongsTo(() => Client)
+  client!: BelongsTo<typeof Client>
+
   @column({ isPrimary: true })
   declare id: number
 

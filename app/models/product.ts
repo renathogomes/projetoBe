@@ -7,6 +7,10 @@ export default class Product extends BaseModel {
   @hasMany(() => Sale)
   declare sales: HasMany<typeof Sale>
 
+  static get tableName() {
+    return 'products'
+  }
+
   @column({ isPrimary: true })
   declare id: number
 
