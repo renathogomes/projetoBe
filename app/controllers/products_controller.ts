@@ -27,7 +27,7 @@ export default class ProductsController {
     response.status(201)
 
     return {
-      message: 'Produto criado com sucesso!',
+      message: 'Product created successfully!',
       date: product,
     }
   }
@@ -57,7 +57,7 @@ export default class ProductsController {
     await product.save()
 
     return {
-      message: 'Produto foi atualizado com sucesso!',
+      message: 'Product updated successfully!',
       product,
     }
   }
@@ -74,7 +74,7 @@ export default class ProductsController {
     response.status(200)
 
     return {
-      message: 'Produto foi deletado com sucesso!',
+      message: 'Product deleted successfully!',
     }
   }
 
@@ -87,7 +87,7 @@ export default class ProductsController {
     response.status(200)
 
     return {
-      message: 'Produto foi restaurado com sucesso!',
+      message: 'Product restored successfully!',
     }
   }
 }
