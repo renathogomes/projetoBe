@@ -28,7 +28,7 @@ export default class UsersController {
     await user.save()
 
     return {
-      message: 'Usuário foi atualizado com sucesso!',
+      message: 'User updated successfully!',
       user,
     }
   }
@@ -39,7 +39,7 @@ export default class UsersController {
     await user.delete()
 
     return {
-      message: 'Usuário foi deletado com sucesso!',
+      message: 'User deleted successfully!',
     }
   }
 }
