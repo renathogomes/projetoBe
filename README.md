@@ -240,13 +240,13 @@ export default class LoginController {
       response.status(201)
 
       return {
-        message: 'Usuário cadastrado com sucesso!',
+        message: 'User registered successfully!',
         data: user,
       }
     } catch (error) {
       console.error(error)
-      return response.status(500).json({
-        message: 'Ocorreu um erro ao cadastrar o usuário.',
+      return response.status(400).json({
+        message: 'An error occurred while registering the user.',
       })
     }
   }
@@ -257,7 +257,7 @@ export default class LoginController {
     const user = await User.findBy('email', email)
     if (!user) {
       return response.status(404).json({
-        message: 'E-mail ou senha inválidos.',
+        message: 'Invalid credentials.',
       })
     }
 
@@ -265,7 +265,7 @@ export default class LoginController {
 
     if (!verifyPassword) {
       return response.status(404).json({
-        message: 'E-mail ou senha inválidos.',
+        message: 'Invalid credentials.',
       })
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? '', {
@@ -277,6 +277,7 @@ export default class LoginController {
     })
   }
 }
+
 ```
 
 ### UsersController
@@ -327,6 +328,7 @@ export default class UsersController {
     }
   }
 }
+
 ```
 ### ClientsController
 
@@ -426,6 +428,7 @@ export default class ClientsController {
     }
   }
 }
+
 ```
 ### PhoneNumbersController
 
