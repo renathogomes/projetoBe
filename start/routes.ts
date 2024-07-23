@@ -615,152 +615,159 @@ router
       })
       .use(middleware.clientValidation())
 
-    /**
-     * @api {post} /clients/:clientId/phoneNumbers Create a phone number for a client
-     * @apiName CreateClientPhoneNumber
-     * @apiGroup Client
-     *
-     * @apiHeader {String} Authorization Bearer token.
-     * @apiParam {Number} clientId ID of the client.
-     *
-     * @apiParam {String} phonenumber Phone number to be associated with the client.
-     *
-     * @apiSuccess {String} message Success message.
-     * @apiSuccess {Object} phoneNumber Created phone number data.
-     * @apiSuccess {Number} phoneNumber.clientId ID of the client.
-     * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
-     * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
-     * @apiSuccess {Number} phoneNumber.id ID of the phone number.
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 201 Created
-     *     {
-     *       "message": "Telefone cadastrado com sucesso!",
-     *       "phoneNumber": {
-     *         "clientId": 1,
-     *         "createdAt": "2024-07-08T12:55:33.797+00:00",
-     *         "updatedAt": "2024-07-08T12:55:33.797+00:00",
-     *         "id": 1
-     *       }
-     *     }
-     *
-     * @apiError Unauthorized The token is either missing or invalid.
-     * @apiError NotFound The client with the specified ID was not found.
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 401 Unauthorized
-     *     {
-     *       "message": "Não autorizado"
-     *     }
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 404 Not Found
-     *     {
-     *       "message": "Cliente não encontrado"
-     *     }
-     */
-    router.post('/clients/:clientId/phoneNumbers', [PhoneNumbersController, 'store'])
+    router
+      .group(() => {
+        /**
+         * @api {post} /clients/:clientId/phoneNumbers Create a phone number for a client
+         * @apiName CreateClientPhoneNumber
+         * @apiGroup Client
+         *
+         * @apiHeader {String} Authorization Bearer token.
+         * @apiParam {Number} clientId ID of the client.
+         *
+         * @apiParam {String} phonenumber Phone number to be associated with the client.
+         *
+         * @apiSuccess {String} message Success message.
+         * @apiSuccess {Object} phoneNumber Created phone number data.
+         * @apiSuccess {Number} phoneNumber.clientId ID of the client.
+         * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
+         * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
+         * @apiSuccess {Number} phoneNumber.id ID of the phone number.
+         *
+         * @apiSuccessExample Success-Response:
+         *     HTTP/1.1 201 Created
+         *     {
+         *       "message": "Telefone cadastrado com sucesso!",
+         *       "phoneNumber": {
+         *         "clientId": 1,
+         *         "createdAt": "2024-07-08T12:55:33.797+00:00",
+         *         "updatedAt": "2024-07-08T12:55:33.797+00:00",
+         *         "id": 1
+         *       }
+         *     }
+         *
+         * @apiError Unauthorized The token is either missing or invalid.
+         * @apiError NotFound The client with the specified ID was not found.
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 401 Unauthorized
+         *     {
+         *       "message": "Não autorizado"
+         *     }
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 404 Not Found
+         *     {
+         *       "message": "Cliente não encontrado"
+         *     }
+         */
+        router.post('/clients/:clientId/phoneNumbers', [PhoneNumbersController, 'store'])
 
-    /**
-     * @api {patch} /clients/:clientId/phoneNumbers/:phoneNumberId Update a phone number for a client
-     * @apiName UpdateClientPhoneNumber
-     * @apiGroup Client
-     *
-     * @apiHeader {String} Authorization Bearer token.
-     * @apiParam {Number} clientId ID of the client.
-     * @apiParam {Number} phoneNumberId ID of the phone number to update.
-     *
-     * @apiParam {String} phoneNumber Updated phone number to be associated with the client.
-     *
-     * @apiSuccess {String} message Success message.
-     * @apiSuccess {Object} phoneNumber Updated phone number data.
-     * @apiSuccess {Number} phoneNumber.id ID of the phone number.
-     * @apiSuccess {String} phoneNumber.phoneNumber Updated phone number.
-     * @apiSuccess {Number} phoneNumber.clientId ID of the client associated with the phone number.
-     * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
-     * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "message": "Telefone atualizado com sucesso!",
-     *       "phoneNumber": {
-     *         "id": 1,
-     *         "phoneNumber": "797997763",
-     *         "clientId": 1,
-     *         "createdAt": "2024-07-08T12:55:33.000+00:00",
-     *         "updatedAt": "2024-07-08T13:30:15.271+00:00"
-     *       }
-     *     }
-     *
-     * @apiError Unauthorized The token is either missing or invalid.
-     * @apiError NotFound The client or phone number with the specified ID was not found.
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 401 Unauthorized
-     *     {
-     *       "message": "Não autorizado"
-     *     }
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 404 Not Found
-     *     {
-     *       "message": "Cliente não encontrado"
-     *     }
-     */
-    router.patch('/clients/:clientId/phoneNumbers/:phoneNumberId', [
-      PhoneNumbersController,
-      'update',
-    ])
+        /**
+         * @api {patch} /clients/:clientId/phoneNumbers/:phoneNumberId Update a phone number for a client
+         * @apiName UpdateClientPhoneNumber
+         * @apiGroup Client
+         *
+         * @apiHeader {String} Authorization Bearer token.
+         * @apiParam {Number} clientId ID of the client.
+         * @apiParam {Number} phoneNumberId ID of the phone number to update.
+         *
+         * @apiParam {String} phoneNumber Updated phone number to be associated with the client.
+         *
+         * @apiSuccess {String} message Success message.
+         * @apiSuccess {Object} phoneNumber Updated phone number data.
+         * @apiSuccess {Number} phoneNumber.id ID of the phone number.
+         * @apiSuccess {String} phoneNumber.phoneNumber Updated phone number.
+         * @apiSuccess {Number} phoneNumber.clientId ID of the client associated with the phone number.
+         * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
+         * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
+         *
+         * @apiSuccessExample Success-Response:
+         *     HTTP/1.1 200 OK
+         *     {
+         *       "message": "Telefone atualizado com sucesso!",
+         *       "phoneNumber": {
+         *         "id": 1,
+         *         "phoneNumber": "797997763",
+         *         "clientId": 1,
+         *         "createdAt": "2024-07-08T12:55:33.000+00:00",
+         *         "updatedAt": "2024-07-08T13:30:15.271+00:00"
+         *       }
+         *     }
+         *
+         * @apiError Unauthorized The token is either missing or invalid.
+         * @apiError NotFound The client or phone number with the specified ID was not found.
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 401 Unauthorized
+         *     {
+         *       "message": "Não autorizado"
+         *     }
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 404 Not Found
+         *     {
+         *       "message": "Cliente não encontrado"
+         *     }
+         */
+        router.patch('/clients/:clientId/phoneNumbers/:phoneNumberId', [
+          PhoneNumbersController,
+          'update',
+        ])
 
-    /**
-     * @api {put} /clients/:clientId/phoneNumbers/:phoneNumberId Update a phone number for a client
-     * @apiName UpdateClientPhoneNumber
-     * @apiGroup Client
-     *
-     * @apiHeader {String} Authorization Bearer token.
-     * @apiParam {Number} clientId ID of the client.
-     * @apiParam {Number} phoneNumberId ID of the phone number to update.
-     *
-     * @apiParam {String} phoneNumber Updated phone number to be associated with the client.
-     *
-     * @apiSuccess {String} message Success message.
-     * @apiSuccess {Object} phoneNumber Updated phone number data.
-     * @apiSuccess {Number} phoneNumber.id ID of the phone number.
-     * @apiSuccess {String} phoneNumber.phoneNumber Updated phone number.
-     * @apiSuccess {Number} phoneNumber.clientId ID of the client associated with the phone number.
-     * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
-     * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     {
-     *       "message": "Telefone atualizado com sucesso!",
-     *       "phoneNumber": {
-     *         "id": 1,
-     *         "phoneNumber": "797997763",
-     *         "clientId": 1,
-     *         "createdAt": "2024-07-08T12:55:33.000+00:00",
-     *         "updatedAt": "2024-07-08T13:30:15.271+00:00"
-     *       }
-     *     }
-     *
-     * @apiError Unauthorized The token is either missing or invalid.
-     * @apiError NotFound The client or phone number with the specified ID was not found.
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 401 Unauthorized
-     *     {
-     *       "message": "Não autorizado"
-     *     }
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 404 Not Found
-     *     {
-     *       "message": "Cliente não encontrado"
-     *     }
-     */
-    router.put('/clients/:clientId/phoneNumbers/:phoneNumberId', [PhoneNumbersController, 'update'])
+        /**
+         * @api {put} /clients/:clientId/phoneNumbers/:phoneNumberId Update a phone number for a client
+         * @apiName UpdateClientPhoneNumber
+         * @apiGroup Client
+         *
+         * @apiHeader {String} Authorization Bearer token.
+         * @apiParam {Number} clientId ID of the client.
+         * @apiParam {Number} phoneNumberId ID of the phone number to update.
+         *
+         * @apiParam {String} phoneNumber Updated phone number to be associated with the client.
+         *
+         * @apiSuccess {String} message Success message.
+         * @apiSuccess {Object} phoneNumber Updated phone number data.
+         * @apiSuccess {Number} phoneNumber.id ID of the phone number.
+         * @apiSuccess {String} phoneNumber.phoneNumber Updated phone number.
+         * @apiSuccess {Number} phoneNumber.clientId ID of the client associated with the phone number.
+         * @apiSuccess {String} phoneNumber.createdAt Creation date of the phone number.
+         * @apiSuccess {String} phoneNumber.updatedAt Update date of the phone number.
+         *
+         * @apiSuccessExample Success-Response:
+         *     HTTP/1.1 200 OK
+         *     {
+         *       "message": "Telefone atualizado com sucesso!",
+         *       "phoneNumber": {
+         *         "id": 1,
+         *         "phoneNumber": "797997763",
+         *         "clientId": 1,
+         *         "createdAt": "2024-07-08T12:55:33.000+00:00",
+         *         "updatedAt": "2024-07-08T13:30:15.271+00:00"
+         *       }
+         *     }
+         *
+         * @apiError Unauthorized The token is either missing or invalid.
+         * @apiError NotFound The client or phone number with the specified ID was not found.
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 401 Unauthorized
+         *     {
+         *       "message": "Não autorizado"
+         *     }
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 404 Not Found
+         *     {
+         *       "message": "Cliente não encontrado"
+         *     }
+         */
+        router.put('/clients/:clientId/phoneNumbers/:phoneNumberId', [
+          PhoneNumbersController,
+          'update',
+        ])
+      })
+      .use(middleware.phoneNumberValidate())
 
     /**
      * @api {post} /clients/:clientId/addresses Create an address for a client
