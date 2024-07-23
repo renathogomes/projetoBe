@@ -10,7 +10,7 @@ export default class PhoneNumbersController {
     const client = await Client.findOrFail(clientId)
 
     const phoneNumber = await PhoneNumber.create({
-      phoneNumber: body.phoneNumber,
+      phoneNumber: body.phonenumber,
       clientId: client.id,
     })
 

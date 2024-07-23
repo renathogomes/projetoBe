@@ -20,33 +20,28 @@ export default class ClientValidationMiddleware {
   })
 
   private showSchema = z.object({
-    month: z
-      .string()
-      .regex(/^(0[1-9]|1[0-2])$/, 'Invalid month.')
-      .optional(),
-    year: z
-      .string()
-      .regex(/^\d{4}$/, 'Invalid year.')
-      .optional(),
+    id: z.string().regex(/^\d+$/, 'The ID must be a valid number.'),
   })
 
   async handle(ctx: HttpContext, next: NextFn) {
-    const { request, response } = ctx
+    const { request, response, params } = ctx
     const method = request.method()
+    const url = request.url()
 
     try {
       if (method === 'POST') {
         this.storeSchema.parse(request.body())
       } else if (method === 'PUT') {
         this.updateSchema.parse(request.body())
-      } else if (method === 'GET' && request.url().includes('/clients/')) {
-        this.showSchema.parse(request.qs())
+      } else if (method === 'GET') {
+        if (url.includes('/clients/') && params.id) {
+          this.showSchema.parse(params)
+        }
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
         return response.status(400).json({
-          message: error.errors.map((err) => err.message),
-          local: error.errors.map((err) => err.path.join('.')),
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
         })
       }
     }
