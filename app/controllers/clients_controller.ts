@@ -24,7 +24,7 @@ export default class ClientsController {
     response.status(201)
 
     return {
-      message: 'Cliente cadastrado com sucesso!',
+      message: 'Client registered successfully!',
       date: client,
     }
   }
@@ -75,7 +75,7 @@ export default class ClientsController {
     await client.save()
 
     return {
-      message: 'Cliente atualizado com sucesso!',
+      message: 'Client updated successfully!',
       client,
     }
   }
@@ -89,7 +89,7 @@ export default class ClientsController {
     await client.delete()
 
     return {
-      message: 'Cliente excluído com sucesso!',
+      message: 'Client deleted successfully!',
     }
   }
 }
