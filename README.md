@@ -313,7 +313,7 @@ export default class UsersController {
     await user.save()
 
     return {
-      message: 'Usuário foi atualizado com sucesso!',
+      message: 'User updated successfully!',
       user,
     }
   }
@@ -324,10 +324,11 @@ export default class UsersController {
     await user.delete()
 
     return {
-      message: 'Usuário foi deletado com sucesso!',
+      message: 'User deleted successfully!',
     }
   }
 }
+
 
 ```
 ### ClientsController
@@ -359,7 +360,7 @@ export default class ClientsController {
     response.status(201)
 
     return {
-      message: 'Cliente cadastrado com sucesso!',
+      message: 'Client registered successfully!',
       date: client,
     }
   }
@@ -410,7 +411,7 @@ export default class ClientsController {
     await client.save()
 
     return {
-      message: 'Cliente atualizado com sucesso!',
+      message: 'Client updated successfully!',
       client,
     }
   }
@@ -424,10 +425,11 @@ export default class ClientsController {
     await client.delete()
 
     return {
-      message: 'Cliente excluído com sucesso!',
+      message: 'Client deleted successfully!',
     }
   }
 }
+
 
 ```
 ### PhoneNumbersController
@@ -539,7 +541,7 @@ export default class ProductsController {
     response.status(201)
 
     return {
-      message: 'Produto criado com sucesso!',
+      message: 'Product created successfully!',
       date: product,
     }
   }
@@ -569,7 +571,7 @@ export default class ProductsController {
     await product.save()
 
     return {
-      message: 'Produto foi atualizado com sucesso!',
+      message: 'Product updated successfully!',
       product,
     }
   }
@@ -586,7 +588,7 @@ export default class ProductsController {
     response.status(200)
 
     return {
-      message: 'Produto foi deletado com sucesso!',
+      message: 'Product deleted successfully!',
     }
   }
 
@@ -599,10 +601,11 @@ export default class ProductsController {
     response.status(200)
 
     return {
-      message: 'Produto foi restaurado com sucesso!',
+      message: 'Product restored successfully!',
     }
   }
 }
+
 
 ```
 
@@ -677,13 +680,12 @@ export default class AuthMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const { authorization } = ctx.request.headers()
 
-    if (!authorization) {
-      return ctx.response.status(401).json({
-        message: 'Não autorizado',
-      })
-    }
-
     try {
+      if (!authorization) {
+        return ctx.response.status(401).json({
+          message: 'Unauthorized.',
+        })
+      }
       const token = authorization.split(' ')[1]
 
       const { id } = jwt.verify(token, process.env.JWT_SECRET ?? '') as JwtPayload
@@ -692,7 +694,7 @@ export default class AuthMiddleware {
 
       if (!user) {
         return ctx.response.status(404).json({
-          message: 'Usuário não encontrado',
+          message: 'User not found',
         })
       }
 
@@ -700,11 +702,12 @@ export default class AuthMiddleware {
       return output
     } catch (error) {
       return ctx.response.status(401).json({
-        message: 'Não autorizado',
+        message: 'Unauthorized.',
       })
     }
   }
 }
+
 
 ```
 ### RegistrationValidationMiddleware
@@ -713,14 +716,31 @@ export default class AuthMiddleware {
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
 
 export default class RegistrationValidationMiddleware {
+  private schema = z.object({
+    username: z
+      .string()
+      .min(1, 'The username is required.')
+      .refine((value) => value.trim().length > 0, 'The username cannot be just whitespace.'),
+    email: z.string().email(),
+    password: z.string(),
+  })
+
   async handle(ctx: HttpContext, next: NextFn) {
     const { username, email, password } = ctx.request.body()
 
-    if (!username || !email || !password) {
+    try {
+      this.schema.parse({ username, email, password })
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return ctx.response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
       return ctx.response.status(400).json({
-        message: 'Por favor, verifique se todos os campos estão preenchidos corretamente.',
+        message: 'Error validating registration data.',
       })
     }
 
@@ -728,7 +748,381 @@ export default class RegistrationValidationMiddleware {
 
     if (existingUser) {
       return ctx.response.status(400).json({
-        message: 'Email já cadastrado!',
+        message: ['Email already registered!'],
+      })
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+
+```
+### UserValidationMiddleware
+
+```typescript
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class UserValidationMiddleware {
+  private updateSchema = z.object({
+    username: z.string().min(1, 'The username is required.').trim().optional(),
+    email: z.string().email('The email must be invalid.').trim().optional(),
+    password: z.string().min(1, 'The password is required.').trim().optional(),
+  })
+
+  private showSchema = z.object({
+    id: z.string().regex(/^\d+$/, 'The ID must be a valid number.'),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response, params } = ctx
+    const method = request.method()
+    const url = request.url()
+
+    try {
+      if (method === 'PUT' || method === 'PATCH') {
+        this.updateSchema.parse(request.body())
+      } else if (method === 'GET' || method === 'DELETE') {
+        if (url.includes('/user/') && params.id) {
+          this.showSchema.parse(params)
+        }
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
+
+      return response.status(400).json({
+        message: ['Error validating the data.'],
+      })
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+### SalesValidationMiddleware
+
+```typescript
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+import Client from '#models/client'
+import Product from '#models/product'
+
+export default class SalesValidationMiddleware {
+  private storeSchema = z.object({
+    clientId: z.number(),
+    productId: z.number(),
+    quantity: z
+      .number()
+      .int('The quantity must be a positive integer.')
+      .positive('The quantity must be a positive integer.'),
+  })
+
+  private idSchema = z.object({
+    id: z.string().regex(/^\d+$/, 'The ID must be a valid number.'),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response, params } = ctx
+    const method = request.method()
+    const url = request.url()
+
+    try {
+      if (method === 'POST') {
+        const { clientId, productId } = this.storeSchema.parse(request.body())
+
+        const client = await Client.find(clientId)
+
+        if (!client) {
+          return response.status(404).json({ message: ['Client not found.'] })
+        }
+        const product = await Product.find(productId)
+        if (!product) {
+          return response.status(404).json({ message: ['Product not found.'] })
+        }
+      } else if (method === 'GET' || method === 'DELETE') {
+        if (url.includes('/sales/') && params.id) {
+          this.idSchema.parse(params)
+        }
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({ message: error.errors.map((e) => e.message) })
+      }
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+
+### ProductValidationMiddleware
+
+```typescript
+
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class ProductValidationMiddleware {
+  private storeSchema = z.object({
+    name: z
+      .string()
+      .min(1, 'The product name is required.')
+      .refine((value) => value.trim().length > 0, 'The name cannot be just whitespace.'),
+    description: z.string().min(1, 'The product description is required.'),
+    price: z.number().positive('The price must be a positive number.'),
+  })
+
+  private updateSchema = z.object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    price: z.number().positive('The price must be a positive number.').optional(),
+  })
+
+  private showSchema = z.object({
+    id: z.string().regex(/^\d+$/, 'The ID must be a valid number.'),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response, params } = ctx
+    const method = request.method()
+    const url = request.url()
+
+    try {
+      if (method === 'POST') {
+        this.storeSchema.parse(request.body())
+      } else if (method === 'PUT' || method === 'PATCH') {
+        this.updateSchema.parse(request.body())
+      } else if (method === 'GET' || method === 'DELETE') {
+        if (url.includes('/products/') && params.id) {
+          this.showSchema.parse(params)
+        }
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
+
+      return response.status(400).json({
+        message: ['Error validating the data.'],
+      })
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+### PhoneNumberValidationMiddleware
+
+```typescript
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class PhoneNumberValidateMiddleware {
+  private storeSchema = z.object({
+    phonenumber: z.string().min(10).max(15),
+  })
+
+  private updateSchema = z.object({
+    phonenumber: z.string().min(10).max(15).optional(),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response } = ctx
+    const method = request.method()
+
+    try {
+      if (method === 'POST') {
+        this.storeSchema.parse(request.body())
+      } else if (method === 'PUT' || method === 'PATCH') {
+        this.updateSchema.parse(request.body())
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
+      return response.status(400).json({
+        message: ['Error validating the data.'],
+      })
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+
+### LoginValidation
+
+```typescript
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class LoginValidationMiddleware {
+  private loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string(),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response } = ctx
+    const method = request.method()
+    const url = request.url()
+
+    try {
+      if (method === 'POST' && url.includes('/login')) {
+        this.loginSchema.parse(request.body())
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+
+### ClientValidationMiddleware
+
+```typescript
+
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class ClientValidationMiddleware {
+  private storeSchema = z.object({
+    name: z
+      .string()
+      .min(1, 'O nome é obrigatório.')
+      .refine((value) => value.trim().length > 0, 'The name cannot be just whitespace.'),
+    cpf: z
+      .string()
+      .length(11, 'The CPF must have 11 digits')
+      .refine((value) => value.trim().length > 0, 'The CPF cannot be just whitespace.'),
+  })
+
+  private updateSchema = z.object({
+    name: z.string().optional(),
+    cpf: z.string().length(11, 'The CPF must have 11 digits').optional(),
+  })
+
+  private showSchema = z.object({
+    month: z
+      .string()
+      .regex(/^(0[1-9]|1[0-2])$/, 'Invalid month.')
+      .optional(),
+    year: z
+      .string()
+      .regex(/^\d{4}$/, 'Invalid year.')
+      .optional(),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response } = ctx
+    const method = request.method()
+
+    try {
+      if (method === 'POST') {
+        this.storeSchema.parse(request.body())
+      } else if (method === 'PUT') {
+        this.updateSchema.parse(request.body())
+      } else if (method === 'GET' && request.url().includes('/clients/')) {
+        this.showSchema.parse(request.qs())
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => err.message),
+          local: error.errors.map((err) => err.path.join('.')),
+        })
+      }
+    }
+
+    const output = await next()
+    return output
+  }
+}
+
+```
+
+### AdressValidationMiddleware
+
+```typescript
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+import { z } from 'zod'
+
+export default class AdressValidationMiddleware {
+  private storeSchema = z.object({
+    street: z
+      .string()
+      .min(1, 'Street is required.')
+      .refine((value) => value.trim().length > 0, 'The street cannot be just whitespace.'),
+    number: z
+      .string()
+      .min(1, 'Number is required.')
+      .refine((value) => value.trim().length > 0, 'The number cannot be just whitespace.'),
+    neighborhood: z
+      .string()
+      .refine((value) => value.trim().length > 0, 'The neighborhood cannot be just whitespace.'),
+    city: z
+      .string()
+      .min(1, 'City is required.')
+      .refine((value) => value.trim().length > 0, 'The city cannot be just whitespace.'),
+    state: z
+      .string()
+      .min(1, 'State is required.')
+      .refine((value) => value.trim().length > 0, 'The state cannot be just whitespace.'),
+    postal_code: z
+      .string()
+      .min(1, 'Postal code is required.')
+      .refine((value) => value.trim().length > 0, 'The postal code cannot be just whitespace.'),
+  })
+
+  async handle(ctx: HttpContext, next: NextFn) {
+    const { request, response } = ctx
+    const method = request.method()
+
+    try {
+      if (method === 'POST') {
+        this.storeSchema.parse(request.body())
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return response.status(400).json({
+          message: error.errors.map((err) => `${err.message} ${err.path}`),
+        })
+      }
+      return response.status(400).json({
+        message: ['Error validating the data.'],
       })
     }
 
