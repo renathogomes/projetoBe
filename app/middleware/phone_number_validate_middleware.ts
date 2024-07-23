@@ -12,7 +12,7 @@ export default class PhoneNumberValidateMiddleware {
   })
 
   async handle(ctx: HttpContext, next: NextFn) {
-    const { request, response, params } = ctx
+    const { request, response } = ctx
     const method = request.method()
 
     try {
