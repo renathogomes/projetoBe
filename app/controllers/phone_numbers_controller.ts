@@ -17,7 +17,7 @@ export default class PhoneNumbersController {
     response.status(201)
 
     return {
-      message: 'Telefone cadastrado com sucesso!',
+      message: 'Phone number registered successfully!',
       phoneNumber,
     }
   }
@@ -35,7 +35,7 @@ export default class PhoneNumbersController {
     response.status(200)
 
     return {
-      message: 'Telefone atualizado com sucesso!',
+      message: 'Phone number updated successfully!',
       phoneNumber,
     }
   }
