@@ -14,7 +14,7 @@ export default class AuthMiddleware {
     try {
       if (!authorization) {
         return ctx.response.status(401).json({
-          message: 'Unauthorized.',
+          message: ['Unauthorized.'],
         })
       }
       const token = authorization.split(' ')[1]
@@ -25,7 +25,7 @@ export default class AuthMiddleware {
 
       if (!user) {
         return ctx.response.status(404).json({
-          message: 'User not found',
+          message: ['User not found'],
         })
       }
 
@@ -33,7 +33,7 @@ export default class AuthMiddleware {
       return output
     } catch (error) {
       return ctx.response.status(401).json({
-        message: 'Unauthorized.',
+        message: ['Unauthorized.'],
       })
     }
   }
