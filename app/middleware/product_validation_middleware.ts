@@ -1,3 +1,4 @@
+import Product from '#models/product'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { z } from 'zod'
@@ -35,6 +36,13 @@ export default class ProductValidationMiddleware {
       } else if (method === 'GET' || method === 'DELETE') {
         if (url.includes('/products/') && params.id) {
           this.showSchema.parse(params)
+
+          const product = await Product.find(params.id)
+          if (!product) {
+            return response.status(404).json({
+              message: ['Product not found.'],
+            })
+          }
         }
       }
     } catch (error) {

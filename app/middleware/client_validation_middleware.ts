@@ -1,3 +1,4 @@
+import Client from '#models/client'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { z } from 'zod'
@@ -36,6 +37,11 @@ export default class ClientValidationMiddleware {
       } else if (method === 'GET') {
         if (url.includes('/clients/') && params.id) {
           this.showSchema.parse(params)
+
+          const client = await Client.find(params.id)
+          if (!client) {
+            return response.status(404).json({ message: ['Client not found.'] })
+          }
         }
       }
     } catch (error) {

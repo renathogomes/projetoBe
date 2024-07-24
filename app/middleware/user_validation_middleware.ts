@@ -1,3 +1,4 @@
+import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { z } from 'zod'
@@ -24,6 +25,13 @@ export default class UserValidationMiddleware {
       } else if (method === 'GET' || method === 'DELETE') {
         if (url.includes('/user/') && params.id) {
           this.showSchema.parse(params)
+
+          const user = await User.find(params.id)
+          if (!user) {
+            return response.status(404).json({
+              message: ['User not found.'],
+            })
+          }
         }
       }
     } catch (error) {
